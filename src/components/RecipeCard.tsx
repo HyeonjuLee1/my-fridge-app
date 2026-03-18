@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { SpoonacularRecipe } from '../api';
 
 interface Props {
@@ -5,7 +6,7 @@ interface Props {
   onClick: () => void;
 }
 
-export function RecipeCard({ recipe, onClick }: Props) {
+export const RecipeCard = memo(function RecipeCard({ recipe, onClick }: Props) {
   const total = recipe.usedIngredientCount + recipe.missedIngredientCount;
   const hasAll = recipe.missedIngredientCount === 0;
 
@@ -88,4 +89,4 @@ export function RecipeCard({ recipe, onClick }: Props) {
       </div>
     </div>
   );
-}
+});

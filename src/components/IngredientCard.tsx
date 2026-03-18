@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { Ingredient } from '../types';
 import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR, getDaysColor, getDaysLabel } from '../constants';
 
@@ -7,7 +8,7 @@ interface Props {
   onEdit: (item: Ingredient) => void;
 }
 
-export function IngredientCard({ item, onDelete, onEdit }: Props) {
+export const IngredientCard = memo(function IngredientCard({ item, onDelete, onEdit }: Props) {
   const catStyle = CATEGORY_COLORS[item.category] ?? DEFAULT_CATEGORY_COLOR;
   const dayStyle = getDaysColor(item.daysLeft);
 
@@ -44,4 +45,4 @@ export function IngredientCard({ item, onDelete, onEdit }: Props) {
       </div>
     </div>
   );
-}
+});
