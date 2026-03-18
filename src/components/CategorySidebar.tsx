@@ -10,7 +10,7 @@ interface Props {
 export function CategorySidebar({ ingredients, filterCat, onFilter }: Props) {
   const stats = [
     { label: '오늘 만료', count: ingredients.filter((i) => i.daysLeft <= 1).length, colorClass: 'text-danger-600'  },
-    { label: '3일 내',    count: ingredients.filter((i) => i.daysLeft <= 3).length, colorClass: 'text-accent-600'  },
+    { label: '2~3일 내', count: ingredients.filter((i) => i.daysLeft > 1 && i.daysLeft <= 3).length, colorClass: 'text-accent-600'  },
     { label: '여유 있음', count: ingredients.filter((i) => i.daysLeft >  3).length, colorClass: 'text-primary-600' },
   ];
 
