@@ -22,8 +22,9 @@ function RecipeCardSkeleton() {
 
 export function RecipePage() {
   const { ingredients } = useIngredientStore();
-  const { data: recipes, isLoading, isError, error, refetch } = useRecipesByIngredients(ingredients);
+  const { data: recipes, isLoading, isFetching, isError, error, refetch } = useRecipesByIngredients(ingredients);
   const [selectedRecipe, setSelectedRecipe] = useState<SpoonacularRecipe | null>(null);
+  const [isFetchingDetail, setIsFetchingDetail] = useState(false);
 
   return (
     <>
@@ -63,9 +64,10 @@ export function RecipePage() {
           </p>
           <button
             onClick={() => refetch()}
-            className="px-5 py-2 bg-gray-900 text-white text-sm font-bold rounded-xl border-0 cursor-pointer"
+            disabled={isFetching}
+            className="px-5 py-2 bg-gray-900 text-white text-sm font-bold rounded-xl border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            다시 시도
+            {isFetching ? '불러오는 중...' : '다시 시도'}
           </button>
         </div>
       )}
@@ -82,13 +84,13 @@ export function RecipePage() {
       {!isLoading && !isError && recipes && recipes.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3 sm:gap-4">
           {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} onClick={() => setSelectedRecipe(recipe)} />
+            <RecipeCard key={recipe.id} recipe={recipe} onClick={() => !isFetchingDetail && setSelectedRecipe(recipe)} />
           ))}
         </div>
       )}
 
       {selectedRecipe && (
-        <RecipeDetailModal recipe={selectedRecipe} onClose={() => setSelectedRecipe(null)} />
+        <RecipeDetailModal recipe={selectedRecipe} onClose={() => setSelectedRecipe(null)} onFetchingChange={setIsFetchingDetail} />
       )}
     </>
   );

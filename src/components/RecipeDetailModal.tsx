@@ -1,18 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { fetchRecipeDetail } from '../api/recipes';
 import type { SpoonacularRecipe } from '../api/recipes';
 
 interface Props {
   recipe: SpoonacularRecipe;
   onClose: () => void;
+  onFetchingChange?: (fetching: boolean) => void;
 }
 
-export function RecipeDetailModal({ recipe, onClose }: Props) {
-  const { data: detail, isLoading, isError } = useQuery({
+export function RecipeDetailModal({ recipe, onClose, onFetchingChange }: Props) {
+  const { data: detail, isLoading, isError, isFetching } = useQuery({
     queryKey: ['recipeDetail', recipe.id],
     queryFn: () => fetchRecipeDetail(recipe.id),
     staleTime: 1000 * 60 * 10,
   });
+
+  useEffect(() => {
+    onFetchingChange?.(isFetching);
+    return () => onFetchingChange?.(false);
+  }, [isFetching, onFetchingChange]);
 
   const steps = detail?.analyzedInstructions?.[0]?.steps ?? [];
 
@@ -21,7 +28,7 @@ export function RecipeDetailModal({ recipe, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-[100] p-0 sm:p-4"
+      className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-100 p-0 sm:p-4"
       onClick={onClose}
     >
       <div
