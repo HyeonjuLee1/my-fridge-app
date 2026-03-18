@@ -9,6 +9,7 @@ interface Props {
 }
 
 export function FridgePage({ onEdit }: Props) {
+
   const { ingredients, deleteIngredient } = useIngredientStore();
   const [filterCat, setFilterCat] = useState<CategoryFilter>("전체");
   const [search, setSearch] = useState("");
