@@ -2,7 +2,7 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import type { Ingredient, NewIngredient } from '../types';
-import { CATEGORIES, DEFAULT_NEW_INGREDIENT } from '../constants';
+import { CATEGORIES, DEFAULT_NEW_INGREDIENT, FOOD_EMOJIS } from '../constants';
 
 // ─── 스키마 ────────────────────────────────────────────────────
 const ingredientSchema = z.object({
@@ -45,6 +45,7 @@ export function AddModal({ onClose, onAdd, onEdit, initialIngredient }: Props) {
   });
 
   const daysLeft = useWatch({ control, name: 'daysLeft' });
+  const selectedEmoji = useWatch({ control, name: 'emoji' });
 
   const onSubmit = (data: IngredientFormValues) => {
     if (isEditMode && onEdit && initialIngredient) {
@@ -98,6 +99,43 @@ export function AddModal({ onClose, onAdd, onEdit, initialIngredient }: Props) {
             {errors.amount && (
               <p className="text-xs text-red-500 mt-1">{errors.amount.message}</p>
             )}
+          </div>
+
+          {/* 이모지 */}
+          <div>
+            <label className="text-xs text-gray-400 block mb-1">이모지</label>
+            <Controller
+              name="emoji"
+              control={control}
+              render={({ field }) => (
+                <div>
+                  {/* 선택된 이모지 미리보기 */}
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-4xl w-12 h-12 flex items-center justify-center bg-gray-50 rounded-xl border border-gray-200">
+                      {selectedEmoji}
+                    </span>
+                    <span className="text-xs text-gray-400">아래에서 선택하세요</span>
+                  </div>
+                  {/* 이모지 그리드 */}
+                  <div className="grid grid-cols-9 gap-1 p-2 bg-gray-50 rounded-xl max-h-32 overflow-y-auto">
+                    {FOOD_EMOJIS.map((emoji) => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        onClick={() => field.onChange(emoji)}
+                        className={`text-xl w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${
+                          field.value === emoji
+                            ? 'bg-gray-900 shadow-sm scale-110'
+                            : 'hover:bg-gray-200'
+                        }`}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            />
           </div>
 
           {/* 카테고리 */}
