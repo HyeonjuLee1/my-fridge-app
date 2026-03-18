@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import type { Ingredient } from './types';
-import { Header, AddModal } from './components';
+import { Header, AddModal, ErrorBoundary } from './components';
 import { FridgePage, RecipePage } from './pages';
 import { useIngredientStore } from './store/useIngredientStore';
 
@@ -21,8 +21,8 @@ function App() {
 
       <main className="max-w-300 mx-auto px-4 pt-5 pb-20 sm:px-6 sm:py-7 lg:py-8 lg:px-10">
         <Routes>
-          <Route path="/"       element={<FridgePage onEdit={setEditingIngredient} />} />
-          <Route path="/recipe" element={<RecipePage />} />
+          <Route path="/"       element={<ErrorBoundary><FridgePage onEdit={setEditingIngredient} /></ErrorBoundary>} />
+          <Route path="/recipe" element={<ErrorBoundary><RecipePage /></ErrorBoundary>} />
           <Route path="*"       element={<Navigate to="/" replace />} />
         </Routes>
       </main>
