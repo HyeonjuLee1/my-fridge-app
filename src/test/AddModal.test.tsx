@@ -66,6 +66,47 @@ describe('AddModal - 추가 모드', () => {
   });
 });
 
+describe('AddModal - 유효성 검사 (Zod)', () => {
+  it('이름 미입력 후 제출 시 에러 메시지를 표시한다', async () => {
+    render(<AddModal onClose={vi.fn()} onAdd={vi.fn()} />);
+
+    await userEvent.type(screen.getByPlaceholderText('예: 2개'), '1개');
+    await userEvent.click(screen.getByText('추가하기'));
+
+    expect(screen.getByText('이름을 입력해주세요')).toBeInTheDocument();
+  });
+
+  it('수량 미입력 후 제출 시 에러 메시지를 표시한다', async () => {
+    render(<AddModal onClose={vi.fn()} onAdd={vi.fn()} />);
+
+    await userEvent.type(screen.getByPlaceholderText('예: 양파'), '양파');
+    await userEvent.click(screen.getByText('추가하기'));
+
+    expect(screen.getByText('수량을 입력해주세요')).toBeInTheDocument();
+  });
+
+  it('이름이 20자 초과 시 에러 메시지를 표시한다', async () => {
+    render(<AddModal onClose={vi.fn()} onAdd={vi.fn()} />);
+
+    await userEvent.type(screen.getByPlaceholderText('예: 양파'), '가'.repeat(21));
+    await userEvent.type(screen.getByPlaceholderText('예: 2개'), '1개');
+    await userEvent.click(screen.getByText('추가하기'));
+
+    expect(screen.getByText('20자 이내로 입력해주세요')).toBeInTheDocument();
+  });
+
+  it('유효성 통과 시 에러 메시지가 표시되지 않는다', async () => {
+    render(<AddModal onClose={vi.fn()} onAdd={vi.fn()} />);
+
+    await userEvent.type(screen.getByPlaceholderText('예: 양파'), '양파');
+    await userEvent.type(screen.getByPlaceholderText('예: 2개'), '1개');
+    await userEvent.click(screen.getByText('추가하기'));
+
+    expect(screen.queryByText('이름을 입력해주세요')).not.toBeInTheDocument();
+    expect(screen.queryByText('수량을 입력해주세요')).not.toBeInTheDocument();
+  });
+});
+
 describe('AddModal - 수정 모드', () => {
   const existingIngredient: Ingredient = {
     id: 42,
