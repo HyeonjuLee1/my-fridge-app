@@ -45,6 +45,13 @@ export function RecipePage() {
         </div>
       )}
 
+      {/* 스크린 리더용 상태 알림 */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {isLoading && '레시피를 불러오는 중입니다.'}
+        {isError && '레시피를 불러오지 못했습니다.'}
+        {!isLoading && !isError && recipes && `레시피 ${recipes.length}개를 불러왔습니다.`}
+      </div>
+
       {/* 로딩 스켈레톤 */}
       {isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3 sm:gap-4">

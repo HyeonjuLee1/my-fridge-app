@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import type { Ingredient, NewIngredient } from '../types';
 import { CATEGORIES, DEFAULT_NEW_INGREDIENT, FOOD_EMOJIS } from '../constants';
+import { useFocusTrap } from '../hooks';
 
 // ─── 스키마 ────────────────────────────────────────────────────
 const ingredientSchema = z.object({
@@ -46,6 +47,7 @@ export function AddModal({ onClose, onAdd, onEdit, initialIngredient }: Props) {
 
   const daysLeft = useWatch({ control, name: 'daysLeft' });
   const selectedEmoji = useWatch({ control, name: 'emoji' });
+  const trapRef = useFocusTrap();
 
   const onSubmit = (data: IngredientFormValues) => {
     if (isEditMode && onEdit && initialIngredient) {
@@ -62,10 +64,14 @@ export function AddModal({ onClose, onAdd, onEdit, initialIngredient }: Props) {
       onClick={onClose}
     >
       <div
+        ref={trapRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
         className="bg-white rounded-t-[20px] p-6 w-full max-w-[480px]"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-base font-semibold text-gray-900 m-0 mb-5">
+        <h3 id="modal-title" className="text-base font-semibold text-gray-900 m-0 mb-5">
           {isEditMode ? '재료 수정' : '재료 추가'}
         </h3>
 
