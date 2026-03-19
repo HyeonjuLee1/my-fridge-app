@@ -9,7 +9,6 @@ interface Props {
 }
 
 export function FridgePage({ onEdit }: Props) {
-
   const { ingredients, deleteIngredient } = useIngredientStore();
   const [filterCat, setFilterCat] = useState<CategoryFilter>("전체");
   const [search, setSearch] = useState("");
@@ -78,13 +77,18 @@ export function FridgePage({ onEdit }: Props) {
         <div className="flex-1">
           {filtered.length === 0 ? (
             <div className="text-center py-16 text-gray-400">
-              <div className="text-4xl mb-3">🫙</div>
+              <div className="text-4xl mb-3">🍽️</div>
               <p className="text-sm">해당 재료가 없어요</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2.5 sm:gap-3.5">
               {filtered.map((item) => (
-                <IngredientCard key={item.id} item={item} onDelete={deleteIngredient} onEdit={onEdit} />
+                <IngredientCard
+                  key={item.id}
+                  item={item}
+                  onDelete={deleteIngredient}
+                  onEdit={onEdit}
+                />
               ))}
             </div>
           )}
