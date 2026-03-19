@@ -24,6 +24,10 @@ export function useFocusTrap() {
 
     const previousFocus = document.activeElement as HTMLElement;
 
+    // 모달 열리는 동안 body 스크롤 방지
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const getFocusable = () =>
       Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS));
 
@@ -50,6 +54,7 @@ export function useFocusTrap() {
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow; // 스크롤 복원
       previousFocus?.focus(); // 모달 닫힐 때 원래 포커스 복원
     };
   }, []);
