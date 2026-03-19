@@ -60,7 +60,7 @@ export function AddModal({ onClose, onAdd, onEdit, initialIngredient }: Props) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 flex items-end justify-center z-[100]"
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-[100] px-4"
       onClick={onClose}
     >
       <div
@@ -68,12 +68,22 @@ export function AddModal({ onClose, onAdd, onEdit, initialIngredient }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="bg-white rounded-t-[20px] p-6 w-full max-w-[480px]"
+        className="bg-white rounded-[20px] p-6 w-full max-w-[480px] max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 id="modal-title" className="text-base font-semibold text-gray-900 m-0 mb-5">
-          {isEditMode ? '재료 수정' : '재료 추가'}
-        </h3>
+        <div className="flex items-center justify-between mb-5">
+          <h3 id="modal-title" className="text-base font-semibold text-gray-900 m-0">
+            {isEditMode ? '재료 수정' : '재료 추가'}
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="닫기"
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition-colors"
+          >
+            ✕
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-3">
 
