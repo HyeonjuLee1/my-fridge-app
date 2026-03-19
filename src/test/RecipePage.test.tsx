@@ -56,7 +56,7 @@ describe('RecipePage', () => {
       deleteIngredient: vi.fn(),
       updateIngredient: vi.fn(),
     });
-    mockUseRecipes.mockReturnValue(defaultRecipesResult as ReturnType<typeof useRecipesByIngredients>);
+    mockUseRecipes.mockReturnValue(defaultRecipesResult as unknown as ReturnType<typeof useRecipesByIngredients>);
   });
 
   it('재료가 없으면 재료 추가 안내 메시지를 표시한다', () => {
@@ -76,7 +76,7 @@ describe('RecipePage', () => {
     mockUseRecipes.mockReturnValue({
       ...defaultRecipesResult,
       isLoading: true,
-    } as ReturnType<typeof useRecipesByIngredients>);
+    } as unknown as ReturnType<typeof useRecipesByIngredients>);
 
     render(<RecipePage />);
 
@@ -88,7 +88,7 @@ describe('RecipePage', () => {
       ...defaultRecipesResult,
       isError: true,
       error: new Error('네트워크 오류'),
-    } as ReturnType<typeof useRecipesByIngredients>);
+    } as unknown as ReturnType<typeof useRecipesByIngredients>);
 
     render(<RecipePage />);
 
@@ -104,7 +104,7 @@ describe('RecipePage', () => {
       isError: true,
       error: new Error('오류'),
       refetch,
-    } as ReturnType<typeof useRecipesByIngredients>);
+    } as unknown as ReturnType<typeof useRecipesByIngredients>);
 
     render(<RecipePage />);
     await userEvent.click(screen.getByRole('button', { name: '다시 시도' }));
@@ -116,7 +116,7 @@ describe('RecipePage', () => {
     mockUseRecipes.mockReturnValue({
       ...defaultRecipesResult,
       data: [],
-    } as ReturnType<typeof useRecipesByIngredients>);
+    } as unknown as ReturnType<typeof useRecipesByIngredients>);
 
     render(<RecipePage />);
 
@@ -127,7 +127,7 @@ describe('RecipePage', () => {
     mockUseRecipes.mockReturnValue({
       ...defaultRecipesResult,
       data: mockRecipes,
-    } as ReturnType<typeof useRecipesByIngredients>);
+    } as unknown as ReturnType<typeof useRecipesByIngredients>);
 
     render(<RecipePage />);
 
