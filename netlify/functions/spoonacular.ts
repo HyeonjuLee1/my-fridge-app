@@ -12,9 +12,8 @@ export const handler: Handler = async (event: HandlerEvent) => {
     };
   }
 
-  // /.netlify/functions/spoonacular/recipes/findByIngredients
-  // → /recipes/findByIngredients
-  const apiPath = event.path.replace('/.netlify/functions/spoonacular', '');
+  // /api/spoonacular/recipes/findByIngredients → /recipes/findByIngredients
+  const apiPath = event.path.replace('/api/spoonacular', '');
 
   const params = new URLSearchParams({
     ...(event.queryStringParameters ?? {}),
