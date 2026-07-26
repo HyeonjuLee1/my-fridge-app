@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFocusTrap } from '../hooks';
 import { fetchRecipeDetail } from '../api/recipes';
 import type { SpoonacularRecipe } from '../api/recipes';
@@ -12,6 +12,7 @@ interface Props {
 
 export function RecipeDetailModal({ recipe, onClose, onFetchingChange }: Props) {
   const trapRef = useFocusTrap();
+  const [imgError, setImgError] = useState(false);
   const { data: detail, isLoading, isError, isFetching } = useQuery({
     queryKey: ['recipeDetail', recipe.id],
     queryFn: () => fetchRecipeDetail(recipe.id),
@@ -43,7 +44,16 @@ export function RecipeDetailModal({ recipe, onClose, onFetchingChange }: Props) 
       >
         {/* 이미지 */}
         <div className="relative w-full h-48 bg-gray-100 shrink-0">
-          <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover sm:rounded-t-2xl" />
+          {imgError || !recipe.image ? (
+            <div className="w-full h-full flex items-center justify-center text-5xl sm:rounded-t-2xl">🍽️</div>
+          ) : (
+            <img
+              src={recipe.image}
+              alt={recipe.title}
+              className="w-full h-full object-cover sm:rounded-t-2xl"
+              onError={() => setImgError(true)}
+            />
+          )}
           <button
             onClick={onClose}
             aria-label="닫기"

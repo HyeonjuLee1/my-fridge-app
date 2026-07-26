@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom';
 
 const NAV_ITEMS = [
-  { to: '/',       label: '냉장고',     emoji: '🧊' },
-  { to: '/recipe', label: '레시피 추천', emoji: '🍳' },
+  { to: '/',         label: '냉장고',     emoji: '🧊' },
+  { to: '/recipe',   label: '레시피 추천', emoji: '🍳' },
+  { to: '/shopping', label: '장보기',     emoji: '🛒' },
 ] as const;
 
 interface Props {

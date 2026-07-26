@@ -1,14 +1,17 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import type { SpoonacularRecipe } from '../api';
 
 interface Props {
   recipe: SpoonacularRecipe;
   onClick: () => void;
+  isSaved?: boolean;
+  onToggleSave?: () => void;
 }
 
-export const RecipeCard = memo(function RecipeCard({ recipe, onClick }: Props) {
+export const RecipeCard = memo(function RecipeCard({ recipe, onClick, isSaved = false, onToggleSave }: Props) {
   const total = recipe.usedIngredientCount + recipe.missedIngredientCount;
   const hasAll = recipe.missedIngredientCount === 0;
+  const [imgError, setImgError] = useState(false);
 
   return (
     <div
@@ -19,12 +22,31 @@ export const RecipeCard = memo(function RecipeCard({ recipe, onClick }: Props) {
     >
       {/* 레시피 이미지 */}
       <div className="relative w-full h-40 bg-gray-100">
-        <img
-          src={recipe.image}
-          alt={recipe.title}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
+        {imgError || !recipe.image ? (
+          <div className="w-full h-full flex items-center justify-center text-4xl">🍽️</div>
+        ) : (
+          <img
+            src={recipe.image}
+            alt={recipe.title}
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        )}
+        {onToggleSave && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSave();
+            }}
+            aria-label={isSaved ? `${recipe.title} 찜 취소` : `${recipe.title} 찜하기`}
+            aria-pressed={isSaved}
+            className="absolute top-2 left-2 w-8 h-8 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center text-base transition-colors"
+          >
+            {isSaved ? '❤️' : '🤍'}
+          </button>
+        )}
         {/* 보유 현황 배지 */}
         <span
           className={`absolute top-2 right-2 text-[11px] font-bold px-2.5 py-1 rounded-full ${

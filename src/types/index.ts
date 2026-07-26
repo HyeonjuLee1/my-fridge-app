@@ -26,6 +26,19 @@ export interface Recipe {
   calories: number;
 }
 
+// ─── 장보기 리스트 ────────────────────────────────────────────
+export interface SavedRecipeIngredient {
+  id: number;
+  name: string;
+}
+
+/** 찜한 레시피 (장보기 리스트 집계용 스냅샷) */
+export interface SavedRecipe {
+  id: number;
+  title: string;
+  missedIngredients: SavedRecipeIngredient[];
+}
+
 // ─── UI 스타일 타입 (Tailwind 클래스 문자열) ────────────────
 export interface CategoryColorStyle {
   bgClass: string;

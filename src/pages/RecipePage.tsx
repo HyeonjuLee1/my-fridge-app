@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { RecipeCard, RecipeDetailModal } from '../components';
 import { useRecipesByIngredients } from '../hooks';
 import { useIngredientStore } from '../store/useIngredientStore';
+import { useShoppingListStore } from '../store/useShoppingListStore';
 import type { SpoonacularRecipe } from '../api/recipes';
 
 function RecipeCardSkeleton() {
@@ -25,6 +26,10 @@ export function RecipePage() {
   const { data: recipes, isLoading, isFetching, isError, error, refetch } = useRecipesByIngredients(ingredients);
   const [selectedRecipe, setSelectedRecipe] = useState<SpoonacularRecipe | null>(null);
   const [isFetchingDetail, setIsFetchingDetail] = useState(false);
+
+  const savedRecipes = useShoppingListStore((s) => s.savedRecipes);
+  const toggleSaveRecipe = useShoppingListStore((s) => s.toggleSaveRecipe);
+  const savedIds = useMemo(() => new Set(savedRecipes.map((r) => r.id)), [savedRecipes]);
 
   return (
     <>
@@ -91,7 +96,13 @@ export function RecipePage() {
       {!isLoading && !isError && recipes && recipes.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3 sm:gap-4">
           {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} onClick={() => !isFetchingDetail && setSelectedRecipe(recipe)} />
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onClick={() => !isFetchingDetail && setSelectedRecipe(recipe)}
+              isSaved={savedIds.has(recipe.id)}
+              onToggleSave={() => toggleSaveRecipe(recipe)}
+            />
           ))}
         </div>
       )}

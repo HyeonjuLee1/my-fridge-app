@@ -9,6 +9,8 @@
 - 카테고리별 필터링 및 재료 검색
 - 보유 재료 기반 레시피 추천 (Spoonacular API)
 - 레시피 상세 정보 및 조리 순서 제공
+- 레시피 찜하기 및 부족한 재료 장보기 리스트 자동 집계
+- 장보기 완료 재료 냉장고 일괄 등록
 
 ## 기술 스택
 
@@ -54,6 +56,13 @@ Spoonacular API Key를 Vite 개발 서버 프록시로 서버사이드에서 주
 
 ### 에러 처리
 `ErrorBoundary`를 페이지 단위로 적용해 한 페이지의 런타임 에러가 전체 앱에 영향을 주지 않도록 격리했습니다.
+레시피 이미지 URL이 깨진 경우에도 `onError` 핸들러로 감지해 빈 이미지 아이콘 대신 이모지 플레이스홀더를 보여줍니다.
+
+### 장보기 리스트
+냉장고 → 레시피 추천 → 장보기 → 냉장고로 이어지는 순환 구조를 만들기 위해 추가한 기능입니다.
+- 레시피 카드에서 찜하면 해당 레시피의 부족한 재료(`missedIngredients`)를 스냅샷으로 저장 (`useShoppingListStore`, localStorage 영속성)
+- 여러 레시피가 겹치는 재료를 요구하면 재료 이름 기준으로 병합해 한 줄로 집계 (예: "양파" — 김치볶음밥, 된장찌개)
+- 체크박스로 구매 완료 표시 후 일괄 등록 시 `useIngredientStore.addIngredient`로 냉장고에 바로 추가되고, 해당 재료는 찜한 모든 레시피의 부족 목록에서 함께 제거됨
 
 ## 테스트 전략
 
@@ -62,7 +71,7 @@ Spoonacular API Key를 Vite 개발 서버 프록시로 서버사이드에서 주
 | 계층 | 파일 | 내용 |
 |------|------|------|
 | 순수 함수 | `constants.test.ts`, `recipes.test.ts` | 입출력 검증, mock 없음 |
-| 스토어 | `useIngredientStore.test.ts` | 상태 변화 검증 |
+| 스토어 | `useIngredientStore.test.ts`, `useShoppingListStore.test.ts` | 상태 변화 검증 |
 | 컴포넌트 | `AddModal.test.tsx`, `IngredientCard.test.tsx`, `ErrorBoundary.test.tsx` | 사용자 인터랙션 + UI 결과 |
 | 커스텀 훅 | `useRecipesByIngredients.test.tsx` | API mock + 비동기 상태 |
 | 페이지 | `RecipePage.test.tsx` | 훅 mock + UI 분기 검증 |
