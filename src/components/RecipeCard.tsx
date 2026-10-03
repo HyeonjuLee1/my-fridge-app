@@ -21,7 +21,7 @@ export const RecipeCard = memo(function RecipeCard({ recipe, onClick, isSaved = 
       }`}
     >
       {/* 레시피 이미지 */}
-      <div className="relative w-full h-40 bg-gray-100">
+      <div className="relative w-full aspect-4/3 bg-gray-100">
         {imgError || !recipe.image ? (
           <div className="w-full h-full flex items-center justify-center text-4xl">🍽️</div>
         ) : (

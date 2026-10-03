@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useFocusTrap } from '../hooks';
 import { fetchRecipeDetail } from '../api/recipes';
 import type { SpoonacularRecipe } from '../api/recipes';
+import { toLargeSpoonacularImage } from '../utils';
 
 interface Props {
   recipe: SpoonacularRecipe;
@@ -29,6 +30,8 @@ export function RecipeDetailModal({ recipe, onClose, onFetchingChange }: Props) 
   // summary에서 HTML 태그 제거
   const plainSummary = detail?.summary?.replace(/<[^>]*>/g, '') ?? '';
 
+  const imageSrc = recipe.image ? toLargeSpoonacularImage(recipe.image) : '';
+
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-100 p-0 sm:p-4"
@@ -39,16 +42,16 @@ export function RecipeDetailModal({ recipe, onClose, onFetchingChange }: Props) 
         role="dialog"
         aria-modal="true"
         aria-label={recipe.title}
-        className="bg-white rounded-t-[20px] sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-t-[20px] sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 이미지 */}
-        <div className="relative w-full h-48 bg-gray-100 shrink-0">
-          {imgError || !recipe.image ? (
+        <div className="relative w-full aspect-636/393 bg-gray-100 shrink-0">
+          {imgError || !imageSrc ? (
             <div className="w-full h-full flex items-center justify-center text-5xl sm:rounded-t-2xl">🍽️</div>
           ) : (
             <img
-              src={recipe.image}
+              src={imageSrc}
               alt={recipe.title}
               className="w-full h-full object-cover sm:rounded-t-2xl"
               onError={() => setImgError(true)}
@@ -63,7 +66,7 @@ export function RecipeDetailModal({ recipe, onClose, onFetchingChange }: Props) 
           </button>
         </div>
 
-        <div className="p-5">
+        <div className="p-5 overflow-y-auto flex-1 min-h-0">
           {/* 제목 */}
           <h2 className="text-[17px] font-extrabold text-gray-900 mb-3 leading-snug">{recipe.title}</h2>
 
